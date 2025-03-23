@@ -28,11 +28,18 @@
             </div>
         </div>
     </section>
-
-
-
-
-
 </body>
+<script>
+
+    const loginUser = localStorage.getItem("loginUser");
+    if (!loginUser) {
+        window.location = "login.html";
+    }
+    const user = JSON.parse(loginUser);
+
+    console.log("Login user full name is ", user.first_name + " " + user.last_name);
+
+    //Write code to fill user profile info.
+</script>
 
 </html>
