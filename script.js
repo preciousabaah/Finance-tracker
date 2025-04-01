@@ -1,7 +1,7 @@
 function loadUsers() {
-    const usersJson = localStorage.getItem("users");
-    if (usersJson) {
-        const users = JSON.parse(usersJson);
+    const usersStr = localStorage.getItem("users");
+    if (usersStr) {
+        const users = JSON.parse(usersStr);
         return users;
     }
     else {

@@ -43,3 +43,11 @@ Assignment:
 
 - In the dropdown, add logout button. when the button is clicked, remove loginUser and redirect to login page.
 
+
+
+localStorage:
+    getItem: it takes the key that is used to store the item and returns a string.
+    setItem: it takes the key to use to store the item and the string to store.
+    removeItem: used to delete a key
+
+    When you try to get a key that does not exists, it return null.
