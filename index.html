@@ -12,16 +12,14 @@
 </head>
 
 <body>
-
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container-fluid">
-
+  
+  <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+    <div class="container">
       <a class="navbar-brand" href="#">Finance Tracker</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mynavbar">
         <span class="navbar-toggler-icon"></span>
       </button>
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <div class="collapse navbar-collapse" id="mynavbar">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item">
             <a class="nav-link active" aria-current="page" href="#">Dashboard</a>
@@ -30,9 +28,23 @@
             <a class="nav-link" href="#">Transactions</a>
           </li>
         </ul>
+        <div class="dropdown">
+          <button class="btn btn-dark dropdown-toggle" type="button" id="dropdownMenuButton1"
+            data-bs-toggle="dropdown" aria-expanded="false">
+            Finance-tracker
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+            <li class="dropdown-item"><span id="full_name"></span></li>
+            <li class="dropdown-item"><span id="email"></span></li>
+            <li class="dropdown-item">Date of birth: <span id="dob"></span></li>
+            <li class="dropdown-item" onclick="logout()"><a href="#">logout</a></li>
+          </ul>
+        </div>
       </div>
     </div>
   </nav>
+
+ 
 
   <section>
     <div class="container">
@@ -44,54 +56,53 @@
 
 
         <div class="col-sm d-flex justify-content-end">
-          <div class="dropdown">
-            <button class="btn btn-dark dropdown-toggle" type="button" id="dropdownMenuButton1"
-              data-bs-toggle="dropdown" aria-expanded="false">
-              Finance-tracker
-            </button>
-            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-              <li class="dropdown-item"><span id="full_name"></span></li>
-              <li class="dropdown-item"><span id="email"></span></li>
-              <li class="dropdown-item">Date of birth: <span id="dob"></span></li>
-              <li class="dropdown-item" onclick="logout()"><a href="#">logout</a></li>
-            </ul>
-          </div>
-        </div>
-      </div>
-
-      <div class="d-flex justify-content-end mt-5 pl-5">
-        <button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#addDialog">Add Transaction</button>
-      </div>
-      <div class="mt-5">
-        <div class="mb-3 d-flex">
-          <div class="Total-Expense mx-3 text-center">
+          <div class="Total-Expense mx-1 text-center">
             <p><span id="totalIncome" class="text-success fw-bold h4"></span><br>Total Income </span></p>
           </div>
 
-          <div class="Total-Expense mx-3 text-center">
+          <div class="Total-Expense mx-1 text-center">
             <p><span id="totalExpense" class="text-danger fw-bold h4"></span><br>Total Expense </span></p>
           </div>
 
-          <div class="Total-Expense mx-3 text-center">
+          <div class="Total-Expense mx-1 text-center">
             <p><span id="netIncome" class="text-primary fw-bold h4"></span><br>Net Income </p>
           </div>
         </div>
-
-        <div class="transaction-1 mb-5">
-          <table class="table">
-            <thead>
-              <tr>
-                <th scope="col">#</th>
-                <th scope="col">Type</th>
-                <th scope="col">Description</th>
-                <th scope="col">Amount</th>
-              </tr>
-            </thead>
-            <tbody id="tableBody">
-            </tbody>
-          </table>
-        </div>
       </div>
+
+
+      <div class="row mt-5">
+        <div class="col-sm mb-3 d-flex">
+          
+
+        </div>
+
+        <div class="d-flex justify-content-end col-sm">
+          <div>
+            <button class="btn btn-dark mb-3" style="border-radius:20px" data-bs-toggle="modal" data-bs-target="#addDialog"><i class="fa fa-plus-circle" aria-hidden="true"></i> Add Transaction
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="transaction-1 mb-5">
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Type</th>
+              <th scope="col">Description</th>
+              <th scope="col">Amount</th>
+              <th scope="col"></th>
+            </tr>
+          </thead>
+          <tbody id="tableBody">
+          </tbody>
+        </table>
+
+      </div>
+
     </div>
   </section>
 
@@ -143,6 +154,7 @@
 <script>
 
   function saveNew() {
+    const transId = Date.now().toString();
     const recordType = document.getElementById('recordType').value;
     const amount = Number(document.getElementById('amount').value);
     const description = document.getElementById('description').value;
@@ -155,6 +167,7 @@
       alert('Please enter a description!');
     } else {
       const transaction = {
+        transId,
         recordType,
         amount,
         description
@@ -166,7 +179,9 @@
       localStorage.setItem('transactions', JSON.stringify(transactions));
 
       document.getElementById("feedback").innerHTML = 'Transaction saved successfully!';
+      newTransForm = getElementById("")
       updateTable();
+  
     }
   }
 
@@ -187,19 +202,21 @@
       snTd.innerText = i + 1;
       row.appendChild(snTd)
 
-      
+
       const typeTd = document.createElement("td");
-      typeTd.innerText = transaction.recordType.toUpperCase();
+      const typePTag = document.createElement("p");
+      typePTag.innerText = transaction.recordType.toUpperCase();
+      typeTd.appendChild(typePTag);
 
       if (transaction.recordType === "income") {
-        typeTd.classList.add('badge', 'bg-success', 'mt-2', 'div-rounded');
+        typePTag.classList.add('badge', 'bg-success', 'div-rounded');
 
-   }
+      }
       else if (transaction.recordType === "expense") {
-       typeTd.classList.add('badge', 'bg-danger', 'mt-2', 'div-rounded');
+        typePTag.classList.add('badge', 'bg-danger', 'div-rounded');
 
-   }
-      row.appendChild(typeTd)
+      }
+      row.appendChild(typeTd);
 
       const descrTd = document.createElement("td");
       descrTd.innerText = transaction.description;
@@ -209,6 +226,10 @@
       const amountTd = document.createElement("td");
       amountTd.innerText = transaction.amount;
       row.appendChild(amountTd);
+
+      const deleteTd = document.createElement("td");
+      deleteTd.innerHTML = `<button class="btn btn-danger" onclick="deleteTransaction(${transaction.transId})"><i class="fa fa-trash" aria-hidden="true"></i></button>`;
+      row.appendChild(deleteTd);
 
       tableBody.appendChild(row);
 
@@ -234,6 +255,17 @@
     while (tableBody && tableBody.firstChild) {
       tableBody.removeChild(tableBody.firstChild);
     }
+  }
+
+  function deleteTransaction(transId) {
+    let Transactions = JSON.parse(localStorage.getItem('transactions'));
+    let Transaction = Transactions.find((trns) => trns.transId == transId);
+
+    Transactions.pop(Transaction);
+    Transactions = JSON.stringify(Transactions);
+    localStorage.setItem('transactions', Transactions);
+    updateTable();
+
   }
 </script>
 
