@@ -12,7 +12,7 @@
 <body style="background-image: url(images/img2.avif);background-repeat: no-repeat;background-size: cover;">
 
   <section>
-    <div class="px-4 py-5 px-md-5 text-center text-lg-start">
+    <div class="px-4 py-5 px-md-5 text-center text-lg-start" id="app" v-cloak>
       <div class="container">
         <div class="row d-flex justify-content-center align-items-center">
 
@@ -28,18 +28,19 @@
                     <h3>Register Now</h3>
                     <p>Join us today and discover new possibilities!</p>
                   </div>
-                  <div id="validationError" class="alert alert-danger my-3 d-none" role="alert">
+                  <div v-show="errorMessage" class="alert alert-danger my-3 d-none" role="alert">
+                    {{errorMessage}}
                   </div>
                   <div class="row">
                     <div class="col-md-6 mb-4">
                       <div>
-                        <input type="text" id="firstname" class="form-control" placeholder="First name">
+                        <input v-model="firstName" type="text" class="form-control" placeholder="First name">
                         <label class="form-label text-light">First name</label>
                       </div>
                     </div>
                     <div class="col-md-6 mb-4">
                       <div>
-                        <input type="text" id="lastname" class="form-control" placeholder="Last name">
+                        <input v-model="lastName" type="text" class="form-control" placeholder="Last name">
                         <label class="form-label text-light">Last name</label>
                       </div>
                     </div>
@@ -47,28 +48,29 @@
 
                   <!-- Email input -->
                   <div class="form-outline mb-4">
-                    <input type="email" id="email" class="form-control" placeholder="Email address">
+                    <input v-model="email" type="email" class="form-control" placeholder="Email address">
                     <label class="form-label text-light">Email address</label>
                   </div>
 
                   <div class="form-outline mb-4">
-                    <input type="date" id="date" class="form-control bg-light">
+                    <input v-model="date" type="date" class="form-control bg-light">
                     <label class="form-label text-light">Date</label>
                   </div>
 
                   <div class=" mb-4">
-                    <input type="password" id="password" class="form-control" placeholder="Enter password">
+                    <input v-model="password" type="password" class="form-control" placeholder="Enter password">
                     <label class="form-label text-light">Password</label>
                   </div>
 
                   <div class=" mb-4">
-                    <input type="password" id="confirmPassword" class="form-control" placeholder="confirmPassword ">
+                    <input v-model="confirmPassword" type="password" class="form-control"
+                      placeholder="confirmPassword ">
                     <label class="form-label text-light">Password</label>
                   </div>
 
 
                   <!-- Submit button -->
-                  <button onclick="Signup()" class="btn btn-primary btn-block mb-3" type="button">
+                  <button v-on:click="signup()" class="btn btn-primary btn-block mb-3" type="button">
                     Signup
                   </button>
 
@@ -87,81 +89,95 @@
         </div>
       </div>
     </div>
+  </section>
 </body>
 
+<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 <script>
 
+  const app = Vue.createApp({
+    data() {
+      return {
+        firstName: "",
+        lastName: "",
+        email: "",
+        password: "",
+        date: "",
+        confirmPassword: "",
+        errorMessage: ""
+      }
+    },
 
-  function Signup() {
-    const firstName = document.getElementById('firstname').value;
-    const lastName = document.getElementById('lastname').value;
-    const email = document.getElementById("email").value;
-    const date = document.getElementById("date").value;
-    const password = document.getElementById("password").value;
-    const confirmPassword = document.getElementById('confirmPassword').value;
 
-    if (firstName.trim().length === 0) {
-      showAlert('Please enter your firstname!');
-    }
-    else if (lastName.trim().length === 0) {
-      showAlert("Please enter your lastname!");
-    }
+    methods: {
+      signup() {
 
-    else if (email.trim().length === 0) {
-      showAlert("No email entered!");
-    }
+        if (this.firstName.trim().length === 0) {
+          this.errorMessage = 'Please enter your firstname!';
+        }
+        else if (this.lastName.trim().length === 0) {
+          this.errorMessage = "Please enter your lastname!";
+        }
 
-    else if (date.trim().length === 0) {
-      showAlert("Please enter your date of birth");
-    }
+        else if (this.email.trim().length === 0) {
+          this.errorMessage = "No email entered!";
+        }
 
-    else if (password.trim().length === 0) {
-      showAlert("Please enter password");
-    }
+        else if (this.date.trim().length === 0) {
+          this.errorMessage = "Please enter your date of birth";
+        }
 
-    else if (confirmPassword === 0) {
-      showAlert("Please confirm your password!");
-    } else if (password !== confirmPassword) {
-      showAlert("Confirm password not equal to password");
-    }
-    else {
-      const user = {
-        first_name: firstName,
-        last_name: lastName,
-        email: email,
-        dob: date,
-        password: password,
+        else if (this.password.trim().length === 0) {
+          this.errorMessage = "Please enter password";
+        }
+
+        else if (this.confirmPassword.trim() === 0) {
+          this.errorMessage = "Please confirm your password!";
+        } else if (this.password !== this.confirmPassword) {
+          this.errorMessage = "Confirm password not equal to password";
+        }
+        else {
+          const user = {
+            first_name: this.firstName,
+            last_name: this.lastName,
+            email: this.email,
+            dob: this.date,
+            password: this.password,
+          }
+
+          const userSaved = saveUser(user);
+          if (userSaved) {
+            this.errorMessage = "Account successfully created, redirecting you to login";
+            setTimeout(() => {
+              window.location.href = "login.html"
+            }, 3000)
+          }
+        }
       }
 
-      const userSaved = saveUser(user);
-      if (userSaved) {
-        showAlert("Account successfully created, redirecting you to login");
-        setTimeout(() => {
-          window.location.href = "login.html"
-        }, 3000)
-      }
-    }
-  }
-
+     }
+  });
+  app.mount('#app');
   function saveUser(user) {
-    const users = loadUsers();
+        const users = loadUsers();
 
-    // check if inside users array there is user with the same email.
-    const userExists = users.some((eachUser) => eachUser.email === user.email);
+        // check if inside users array there is user with the same email.
+        const userExists = users.some((eachUser) => eachUser.email === this.email);
 
-    if (!userExists) {
-      users.push(user);
-      const usersJson = JSON.stringify(users);
-      localStorage.setItem("users", usersJson);
+        if (!userExists) {
+          users.push(user);
+          const usersJson = JSON.stringify(users);
+          localStorage.setItem("users", usersJson);
 
-      return true;
-    }
-    else {
-      showAlert("Account with the same email already exists");
-      return false;
-    }
+          return true;
+        }
+        else {
+          this.errorMessage = "Account with the same email already exists";
+          return false;
+        }
 
-  }
+      }
+   
 </script>
 
 </html>

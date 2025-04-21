@@ -9,8 +9,3 @@ function loadUsers() {
     }
 }
 
-function showAlert(message) {
-    const alertElement = document.getElementById("validationError");
-    alertElement.innerHTML = message;
-    alertElement.classList.remove("d-none");
-}

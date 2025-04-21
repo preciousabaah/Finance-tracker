@@ -12,7 +12,7 @@
 <body style="background-color:rgb(121, 103, 103);">
 
   <section>
-    <div class="container py-5">
+    <div class="container py-5" id="app" v-cloak>
       <div class="row d-flex justify-content-center align-items-center">
         <div class="col-xl-10">
           <div class="card rounded-3 text-light bg-dark">
@@ -21,25 +21,28 @@
                 <div class="card-body p-md-5 mx-md-4">
 
                   <div class="text-center">
-                    <img src="images/logo1" style="width: 80px;" alt="logo">
+                    <img src="images/logo1" style="width: 80px;" alt="logo"/>
                     <p>Please login to your account</p>
                   </div>
 
                   <form>
-                    <div id="validationError" class="alert alert-danger my-3 d-none" role="alert">
+                    <div v-show="errorMessage" class="alert alert-danger my-3 d-none" role="alert">
+                      {{errorMessage}}
                     </div>
                     <div class=" mb-4">
                       <label class="form-label">Username</label>
-                      <input type="email" id="email" class="form-control" placeholder="Email address" />
+                      <input v-model="email" type="email" id="email" class="form-control"
+                        placeholder="Email address" />
                     </div>
 
                     <div class=" mb-4">
                       <label class="form-label">Password</label>
-                      <input type="password" id="pswd" class="form-control" placeholder="Enter password" />
+                      <input v-model="password" type="password" id="pswd" class="form-control"
+                        placeholder="Enter password" />
                     </div>
 
                     <div class="text-center pt-1 mb-5 ">
-                      <button onclick="login()" class="btn btn-primary btn-block mb-3" type="button">Login</button>
+                      <button v-on:click="login()" class="btn btn-primary btn-block mb-3" type="button">Login</button>
                       <a class="text-light d-block" href="#!">Forgot password?</a>
                     </div>
 
@@ -61,35 +64,46 @@
       </div>
     </div>
   </section>
-</body>
+
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 <script>
-  function login() {
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("pswd").value;
-    const alertElement = document.getElementById("validationError");
-
-    if (email.trim().length === 0) {
-      showAlert("No email entered!");
-    }
-    else if (password.trim().length === 0) {
-      showAlert("Please enter password!");
-    }
-
-    else {
-      const users = loadUsers();
-      // we want to return the user if it exists
-      const user = users.find((eachUser) => eachUser.email === email && eachUser.password === password);
-      if (user) {
-        const userJson = JSON.stringify(user);
-        localStorage.setItem("loginUser", userJson);
-        window.location = "index.html";
+  const app = Vue.createApp({
+    data() {
+      return {
+        email: "",
+        password: "",
+        errorMessage: ""
       }
-      else {
-        showAlert("Wrong username or password");
+    },
+    methods: {
+      login() {
+        if (this.email.trim().length === 0) {
+          this.errorMessage = "No email entered!";
+        }
+        else if (this.password.trim().length === 0) {
+           this.errorMessage = "Please enter password!";
+        }
+
+        else {
+          const users = loadUsers();
+          // we want to return the user if it exists
+          const user = users.find((eachUser) => eachUser.email === this.email && eachUser.password === this.password);
+          if (user) {
+            const userJson = JSON.stringify(user);
+            localStorage.setItem("loginUser", userJson);
+            window.location = "index.html";
+          }
+          else {
+            showAlert("Wrong username or password");
+          }
+        }
       }
-    }
-  }
+      }
+    });
+  app.mount('#app');
 
 </script>
+
+</body>
 
 </html>

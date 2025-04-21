@@ -12,313 +12,248 @@
 </head>
 
 <body>
-
-
-  <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
-    <div class="container">
-      <div class="collapse navbar-collapse" id="mynavbar">
-        <ul class="navbar-nav me-auto">
-          <li class="nav-item">
-            <a class="nav-link" href="#">Finance Tracker</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Dashboard</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Transactions</a>
-          </li>
-        </ul>
-        <div class="dropdown">
-          <button class="btn btn-dark dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown"
-            aria-expanded="false">
-            Finance-tracker
-          </button>
-          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-            <li class="dropdown-item"><span id="full_name"></span></li>
-            <li class="dropdown-item"><span id="email"></span></li>
-            <li class="dropdown-item">Date of birth: <span id="dob"></span></li>
-            <li class="dropdown-item" onclick="logout()"><a href="#">logout</a></li>
+  <div id="app" v-cloak>
+    <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+      <div class="container">
+        <div class="collapse navbar-collapse" id="mynavbar">
+          <ul class="navbar-nav me-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="#">Finance Tracker</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Dashboard</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Transactions</a>
+            </li>
           </ul>
-        </div>
-      </div>
-    </div>
-  </nav>
-
-
-
-
-
-
-
-  
-
-
-
-  <section>
-    <div class="container">
-      <div class="row mt-5">
-        <div class="col-sm">
-          <h2 id="welcome_text">Hello</h2>
-          <p>What do you want to record today?</p>
-        </div>
-
-
-        <div class="col-sm d-flex justify-content-end">
-          <div class="Total-Expense mx-1 text-center">
-            <p><span id="totalIncome" class="text-success fw-bold h4"></span><br>Total Income </span></p>
-          </div>
-
-          <div class="Total-Expense mx-1 text-center">
-            <p><span id="totalExpense" class="text-danger fw-bold h4"></span><br>Total Expense </span></p>
-          </div>
-
-          <div class="Total-Expense mx-1 text-center">
-            <p><span id="netIncome" class="text-primary fw-bold h4"></span><br>Net Income </p>
-          </div>
-        </div>
-      </div>
-
-
-      <div class="row mt-5">
-        <div class="col-sm mb-3 d-flex">
-
-
-        </div>
-
-        <div class="d-flex justify-content-end col-sm">
-          <div>
-            <button class="btn btn-dark mb-3" style="border-radius:20px" data-bs-toggle="modal"
-              data-bs-target="#addDialog"><i class="fa fa-plus-circle" aria-hidden="true"></i> Add Transaction
+          <div class="dropdown">
+            <button class="btn btn-dark dropdown-toggle" type="button" id="dropdownMenuButton1"
+              data-bs-toggle="dropdown" aria-expanded="false">
+              Finance-tracker
             </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+              <li class="dropdown-item">{{fullName}}</li>
+              <li class="dropdown-item">{{user.email}}</li>
+              <li class="dropdown-item">Date of birth: {{user.dob}}</li>
+              <li class="dropdown-item" v-on:click="logout()"><a href="#">logout</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <section>
+      <div class="container">
+        <div class="row mt-5">
+          <div class="col-sm">
+            <h2>Hello {{fullName}}</h2>
+            <p>What do you want to record today?</p>
+          </div>
+
+
+          <div class="col-sm d-flex justify-content-end">
+            <div class="Total-Expense mx-1 text-center">
+              <p><span class="text-success fw-bold h4">{{income}}</span><br>Total Income </span></p>
+            </div>
+
+            <div class="Total-Expense mx-1 text-center">
+              <p><span class="text-danger fw-bold h4">{{expense}}</span><br>Total Expense </span></p>
+            </div>
+
+            <div class="Total-Expense mx-1 text-center">
+              <p><span class="text-primary fw-bold h4">{{netIncome}}</span><br>Net Income </p>
+            </div>
           </div>
         </div>
 
+
+        <div class="row mt-5">
+          <div class="col-sm mb-3 d-flex">
+          </div>
+
+          <div class="d-flex justify-content-end col-sm">
+            <div>
+              <button class="btn btn-dark mb-3" style="border-radius:20px" data-bs-toggle="modal"
+                data-bs-target="#addDialog"><i class="fa fa-plus-circle" aria-hidden="true"></i> Add Transaction
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+        <div class=" container transaction-1 mb-5">
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Type</th>
+                <th scope="col">Description</th>
+                <th scope="col">Amount</th>
+                <th scope="col"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(trans, index) in transactions">
+                <td>{{index + 1}}</td>
+                <td><span class="badge"
+                    v-bind:class="{'bg-success': trans.recordType == 'income', 'bg-danger': trans.recordType == 'expense'}">
+                    {{trans.recordType.toUpperCase()}}
+                  </span></td>
+                <td>{{trans.description}}</td>
+                <td>{{trans.amount}}</td>
+                <td>
+                  <button class="btn btn-danger" v-on:click="deleteTransaction(trans.transId)"><i class="fa fa-trash"
+                      aria-hidden="true"></i></button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+        </div>
+
       </div>
+    </section>
+    <!-- Modal -->
+    <div class="modal fade" id="addDialog" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+      aria-labelledby="addDialogLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="addDialogLabel">Add Income/Expense</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div v-show="feedback" class="alert alert-success my-3 " role="alert">
+              {{feedback}}
+            </div>
+            <div class="mb-3 mt-3">
+              <label for="recordType">Select Record Type:</label>
+              <select v-model="recordType" class="form-select">
+                <option value="income">Income</option>
+                <option value="expense">Expense</option>
+              </select>
+            </div>
+            <div class="mb-3 mt-3">
+              <label for="amount" class="form-label">Amount:</label>
+              <input type="text" class="form-control" v-model="amount" placeholder="Enter Amount" name="amount">
+            </div>
 
-      <div class=" container transaction-1 mb-5">
-        <table class="table">
-          <thead>
-            <tr>
-              <th scope="col">#</th>
-              <th scope="col">Type</th>
-              <th scope="col">Description</th>
-              <th scope="col">Amount</th>
-              <th scope="col"></th>
-            </tr>
-          </thead>
-          <tbody id="tableBody">
-          </tbody>
-        </table>
+            <div class="mb-3 mt-3">
+              <label for="description" class="form-label">Description:</label>
+              <input type="text" class="form-control" v-model="description" placeholder="Enter Description"
+                name="description">
+            </div>
 
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" v-on:click="saveNew()">Save</button>
+
+          </div>
+        </div>
       </div>
-
     </div>
-  </section>
-
   </div>
-  <!-- Modal -->
-  <div class="modal fade" id="addDialog" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-    aria-labelledby="addDialogLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="addDialogLabel">Add Income/Expense</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <div id="feedback" class="alert alert-success my-3 " role="alert">
-          </div>
-          <div class="mb-3 mt-3">
-            <label for="recordType">Select Record Type:</label>
-            <select class="form-select" id="recordType">
-              <option value="income">Income</option>
-              <option value="expense">Expense</option>
-            </select>
-          </div>
-          <div class="mb-3 mt-3">
-            <label for="amount" class="form-label">Amount:</label>
-            <input type="text" class="form-control" id="amount" placeholder="Enter Amount" name="amount">
-          </div>
 
-          <div class="mb-3 mt-3">
-            <label for="description" class="form-label">Description:</label>
-            <input type="text" class="form-control" id="description" placeholder="Enter Description" name="description">
-          </div>
-
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary" onclick="saveNew()">Save</button>
-
-        </div>
-      </div>
-    </div>
-  </div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
     crossorigin="anonymous"></script>
-</body>
-
-<script>
-
-  function saveNew() {
-    const transId = Date.now().toString();
-    const recordType = document.getElementById('recordType').value;
-    const amount = Number(document.getElementById('amount').value);
-    const description = document.getElementById('description').value;
-
-    if (recordType === '') {
-      alert('Please select a record type!');
-    } else if (amount === '') {
-      alert('Please enter an amount!');
-    } else if (description === '') {
-      alert('Please enter a description!');
-    } else {
-      const transaction = {
-        transId,
-        recordType,
-        amount,
-        description
-      };
-
-      // Save transaction to local storage 
-      const transactions = JSON.parse(localStorage.getItem('transactions')) || [];
-      transactions.push(transaction);
-      localStorage.setItem('transactions', JSON.stringify(transactions));
-
-      document.getElementById("feedback").innerHTML = 'Transaction saved successfully!';
-      newTransForm = getElementById("")
-      updateTable();
-
-    }
-  }
-
-  function updateTable() {
-    clearTable()
-    const transactions = JSON.parse(localStorage.getItem('transactions')) || [];
-    console.log(transactions);
-
-    const tableBody = document.getElementById("tableBody");
-    let totalIncome = 0;
-    let totalExpense = 0;
-    for (let i = 0; i < transactions.length; i++) {
-      const transaction = transactions[i];
-
-      const row = document.createElement("tr");
-
-      const snTd = document.createElement("td");
-      snTd.innerText = i + 1;
-      row.appendChild(snTd)
 
 
-      const typeTd = document.createElement("td");
-      const typePTag = document.createElement("p");
-      typePTag.innerText = transaction.recordType.toUpperCase();
-      typeTd.appendChild(typePTag);
-
-      if (transaction.recordType === "income") {
-        typePTag.classList.add('badge', 'bg-success', 'div-rounded');
-
-      }
-      else if (transaction.recordType === "expense") {
-        typePTag.classList.add('badge', 'bg-danger', 'div-rounded');
-
-      }
-      row.appendChild(typeTd);
-
-      const descrTd = document.createElement("td");
-      descrTd.innerText = transaction.description;
-      row.appendChild(descrTd)
-
-
-      const amountTd = document.createElement("td");
-      amountTd.innerText = transaction.amount;
-      row.appendChild(amountTd);
-
-      const deleteTd = document.createElement("td");
-      deleteTd.innerHTML = `<button class="btn btn-danger" onclick="deleteTransaction(${transaction.transId})"><i class="fa fa-trash" aria-hidden="true"></i></button>`;
-      row.appendChild(deleteTd);
-
-      tableBody.appendChild(row);
-
-      if (transaction.recordType === "income") {
-        totalIncome = totalIncome + Number(transaction.amount);
-      }
-
-      else if (transaction.recordType === "expense") {
-        totalExpense = totalExpense + Number(transaction.amount);
-      }
-
-
-    }
-
-    document.getElementById("totalIncome").innerText = new Intl.NumberFormat().format(totalIncome);
-    document.getElementById("totalExpense").innerText = new Intl.NumberFormat().format(totalExpense);
-    document.getElementById("netIncome").innerText = new Intl.NumberFormat().format(totalIncome - totalExpense);
-  }
-
-  function clearTable() {
-    const tableBody = document.getElementById("tableBody");
-
-    while (tableBody && tableBody.firstChild) {
-      tableBody.removeChild(tableBody.firstChild);
-    }
-  }
-
-  function deleteTransaction(transId) {
-    let Transactions = JSON.parse(localStorage.getItem('transactions'));
-    let Transaction = Transactions.find((trns) => trns.transId == transId);
-
-    Transactions.pop(Transaction);
-    Transactions = JSON.stringify(Transactions);
-    localStorage.setItem('transactions', Transactions);
-    updateTable();
-
-  }
-</script>
-
-
-
-
-
-
-<script>
-
-  const loginUser = localStorage.getItem("loginUser");
-  if (!loginUser) {
-    window.location = "login.html";
-  }
-  const user = JSON.parse(loginUser);
-
-  console.log("Login user full name is ", user.first_name + " " + user.last_name);
-
-  const welcome_text = document.getElementById('welcome_text');
-
-  welcome_text.innerText = "Welcome " + user.first_name + " " + user.last_name;
-
-  const full_name = document.getElementById('full_name');
-  const email = document.getElementById('email');
-  const dob = document.getElementById('dob');
-  full_name.innerText = user.first_name + " " + user.last_name;
-  email.innerText = user.email;
-  dob.innerText = user.dob;
-
-  updateTable()
-
-
-  function logout() {
-    localStorage.removeItem('loginUser');
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <script>
     const loginUser = localStorage.getItem("loginUser");
     if (!loginUser) {
       window.location = "login.html";
     }
-  }
+    const user = JSON.parse(loginUser);
+    const transactions = JSON.parse(localStorage.getItem('transactions')) || [];
+    const { income, expense } = calculateIncomeExpense(transactions);
+
+    const app = Vue.createApp({
+      data() {
+        return {
+          user: user,
+          transactions: transactions,
+          feedback: "",
+          income: income,
+          expense: expense,
+          recordType: "income",
+          description: "",
+          amount: 0
+        }
+      },
+      computed: {
+        fullName() {
+          return this.user.first_name + " " + this.user.last_name
+        },
+        netIncome() {
+          return this.income - this.expense
+        },
+      },
+      watch: {
+        transactions: {
+          deep: true,
+          handler(txns) {
+            const { income, expense } = calculateIncomeExpense(txns);
+            this.income = income;
+            this.expense = expense;
+          }
+        }
+      },
 
 
+      methods: {
+        saveNew() {
+          if (this.recordType === '') {
+            this.feedback = 'Please select a record type!';
+          } else if (this.amount === '') {
+            this.feedback = 'Please enter an amount!';
+          } else if (this.description === '') {
+            this.feedback = 'Please enter a description!';
+          } else {
+            const transaction = {
+              transId: Date.now().toString(),
+              recordType: this.recordType,
+              amount: this.amount,
+              description: this.description
+            };
+            this.transactions.push(transaction);
+            localStorage.setItem('transactions', JSON.stringify(this.transactions));
 
+            this.feedback = 'Transaction saved successfully!';
 
-  //Write code to fill user profile info.
-</script>
+          }
+        },
+        deleteTransaction(transId) {
+          this.transactions = this.transactions.filter((trans) => trans.transId !== transId);
+          localStorage.setItem('transactions', JSON.stringify(this.transactions));
+        }
+      }
+
+    });
+    app.mount('#app');
+
+    function calculateIncomeExpense(transactions) {
+      let income = 0;
+      let expense = 0;
+      for (transaction of transactions) {
+        if (transaction.recordType === "income") {
+          income = income + Number(transaction.amount);
+        }
+        else {
+          expense = expense + Number(transaction.amount);
+        }
+      }
+
+      return {
+        income, expense
+      }
+    }
+  </script>
+  </div>
+</body>
 
 </html>
