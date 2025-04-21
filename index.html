@@ -12,25 +12,25 @@
 </head>
 
 <body>
-  
+
+
   <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
     <div class="container">
-      <a class="navbar-brand" href="#">Finance Tracker</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mynavbar">
-        <span class="navbar-toggler-icon"></span>
-      </button>
       <div class="collapse navbar-collapse" id="mynavbar">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <ul class="navbar-nav me-auto">
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#">Dashboard</a>
+            <a class="nav-link" href="#">Finance Tracker</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Dashboard</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#">Transactions</a>
           </li>
         </ul>
         <div class="dropdown">
-          <button class="btn btn-dark dropdown-toggle" type="button" id="dropdownMenuButton1"
-            data-bs-toggle="dropdown" aria-expanded="false">
+          <button class="btn btn-dark dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown"
+            aria-expanded="false">
             Finance-tracker
           </button>
           <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
@@ -44,7 +44,15 @@
     </div>
   </nav>
 
- 
+
+
+
+
+
+
+  
+
+
 
   <section>
     <div class="container">
@@ -73,20 +81,21 @@
 
       <div class="row mt-5">
         <div class="col-sm mb-3 d-flex">
-          
+
 
         </div>
 
         <div class="d-flex justify-content-end col-sm">
           <div>
-            <button class="btn btn-dark mb-3" style="border-radius:20px" data-bs-toggle="modal" data-bs-target="#addDialog"><i class="fa fa-plus-circle" aria-hidden="true"></i> Add Transaction
+            <button class="btn btn-dark mb-3" style="border-radius:20px" data-bs-toggle="modal"
+              data-bs-target="#addDialog"><i class="fa fa-plus-circle" aria-hidden="true"></i> Add Transaction
             </button>
           </div>
         </div>
 
       </div>
 
-      <div class="transaction-1 mb-5">
+      <div class=" container transaction-1 mb-5">
         <table class="table">
           <thead>
             <tr>
@@ -181,7 +190,7 @@
       document.getElementById("feedback").innerHTML = 'Transaction saved successfully!';
       newTransForm = getElementById("")
       updateTable();
-  
+
     }
   }
 
